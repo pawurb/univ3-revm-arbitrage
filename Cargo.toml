@@ -3,25 +3,33 @@ edition = "2021"
 name = "univ3-revm-arbitrage"
 publish = false
 version = "0.0.0"
+rust-version = "1.78"
 
 [dependencies]
-alloy-provider = {git = "https://github.com/alloy-rs/alloy.git", rev = "44b8a6d", default-features = false, features = [
+alloy-provider = { git = "https://github.com/alloy-rs/alloy.git", rev = "44b8a6d", default-features = false, features = [
   "reqwest",
-]}
-alloy-sol-types = {version = "0.7.0", default-features = false, features = ["std"]}
-alloy-transport-http = {git = "https://github.com/alloy-rs/alloy.git", rev = "44b8a6d"}
+] }
+alloy-sol-types = { version = "0.7.0", default-features = false, features = [
+  "std",
+] }
+alloy-transport-http = { git = "https://github.com/alloy-rs/alloy.git", rev = "44b8a6d" }
 
-alloy-node-bindings = {git = "https://github.com/alloy-rs/alloy.git", rev = "44b8a6d", default-features = false}
-alloy-rpc-types = {git = "https://github.com/alloy-rs/alloy.git", rev = "44b8a6d", default-features = false}
-alloy-transport = {git = "https://github.com/alloy-rs/alloy.git", rev = "44b8a6d", default-features = false}
-cacache = {version = "12.0.0", default-features = false, features = ["tokio-runtime", "mmap"]}
+alloy-node-bindings = { git = "https://github.com/alloy-rs/alloy.git", rev = "44b8a6d", default-features = false }
+alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy.git", rev = "44b8a6d", default-features = false }
+alloy-transport = { git = "https://github.com/alloy-rs/alloy.git", rev = "44b8a6d", default-features = false }
+cacache = { version = "12.0.0", default-features = false, features = [
+  "tokio-runtime",
+  "mmap",
+] }
 
 anyhow = "1.0"
 env_logger = "*"
 portpicker = "0.1.1"
-reqwest = {version = "0.12"}
-revm = {git = "https://github.com/bluealloy/revm", rev = "d54bd99", features = ["alloydb"]}
-tokio = {version = "1.35.1", features = ["full"]}
+reqwest = { version = "0.12" }
+revm = { git = "https://github.com/bluealloy/revm", rev = "d54bd99", features = [
+  "alloydb",
+] }
+tokio = { version = "1.35.1", features = ["full"] }
 
 [[bin]]
 name = "eth_call_one"
