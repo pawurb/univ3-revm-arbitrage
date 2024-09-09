@@ -33,6 +33,7 @@ async fn main() -> Result<()> {
     init_account_with_bytecode(usdc_addr(), mocked_erc20.clone(), &mut cache_db).await?;
 
     let mocked_balance = U256::MAX.div(U256::from(2));
+
     insert_mapping_storage_slot(
         weth_addr(),
         U256::from(0),
@@ -89,7 +90,7 @@ async fn main() -> Result<()> {
             volume, usdc_amount_out, weth_amount_out
         );
 
-        let weth_amount_out = U256::from(volume);
+        let weth_amount_out = U256::from(weth_amount_out);
         if weth_amount_out > volume {
             let profit = weth_amount_out - volume;
             println!("WETH profit: {}", profit);
