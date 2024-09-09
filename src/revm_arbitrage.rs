@@ -33,6 +33,7 @@ async fn main() -> Result<()> {
     init_account_with_bytecode(usdc_addr(), mocked_erc20.clone(), &mut cache_db).await?;
 
     let mocked_balance = U256::MAX.div(U256::from(2));
+    // we got the mocked_balance till here
     insert_mapping_storage_slot(
         weth_addr(),
         U256::from(0),
@@ -71,6 +72,8 @@ async fn main() -> Result<()> {
     let mocked_custom_quoter = Bytecode::new_raw(mocked_custom_quoter);
     init_account_with_bytecode(custom_quoter_addr(), mocked_custom_quoter, &mut cache_db).await?;
 
+    //–––––––––––––––––understoop till here–––––––––––––––––––//
+
     for volume in volumes.into_iter() {
         let calldata = get_amount_out_calldata(pool_500_addr(), weth_addr(), usdc_addr(), volume);
         let response = revm_revert(me(), custom_quoter_addr(), calldata, &mut cache_db)?;
@@ -89,7 +92,7 @@ async fn main() -> Result<()> {
             volume, usdc_amount_out, weth_amount_out
         );
 
-        let weth_amount_out = U256::from(volume);
+        let weth_amount_out = U256::from(weth_amount_out);
         if weth_amount_out > volume {
             let profit = weth_amount_out - volume;
             println!("WETH profit: {}", profit);
