@@ -2,8 +2,8 @@ use alloy::{
     node_bindings::Anvil,
     primitives::U256,
     providers::{Provider, ProviderBuilder},
+    transports::http::reqwest::Url,
 };
-use reqwest::Url;
 use std::sync::Arc;
 pub mod source;
 use anyhow::Result;

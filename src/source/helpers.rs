@@ -4,11 +4,10 @@ use alloy::{
     providers::{Provider, RootProvider},
     rpc::types::TransactionRequest,
     sol_types::SolValue,
-    transports::http::Http,
+    transports::http::{Client, Http},
 };
 
 use anyhow::{anyhow, Result};
-use reqwest::Client;
 use revm::primitives::{keccak256, AccountInfo, Bytecode};
 use revm::{
     db::{AlloyDB, CacheDB},
