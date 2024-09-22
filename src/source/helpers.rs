@@ -1,6 +1,6 @@
 use alloy::{
     network::{Ethereum, TransactionBuilder},
-    primitives::{Address, Bytes, U256},
+    primitives::{utils::parse_units, Address, Bytes, U256},
     providers::{Provider, RootProvider},
     rpc::types::TransactionRequest,
     sol_types::SolValue,
@@ -30,11 +30,11 @@ pub fn measure_end(start: (String, Instant)) -> Duration {
 }
 
 pub fn one_ether() -> U256 {
-    "1000000000000000000".parse().unwrap()
+    parse_units("1.0", "ether").unwrap().into()
 }
 
 pub fn volumes(from: U256, to: U256, count: usize) -> Vec<U256> {
-    let start = U256::from(0);
+    let start = U256::ZERO;
     let mut volumes = Vec::new();
     let distance = to - from;
     let step = distance / U256::from(count);
@@ -76,7 +76,7 @@ pub fn revm_call(
             tx.caller = from;
             tx.transact_to = TransactTo::Call(to);
             tx.data = calldata;
-            tx.value = U256::from(0);
+            tx.value = U256::ZERO;
         })
         .build();
 
@@ -108,7 +108,7 @@ pub fn revm_revert(
             tx.caller = from;
             tx.transact_to = TransactTo::Call(to);
             tx.data = calldata;
-            tx.value = U256::from(0);
+            tx.value = U256::ZERO;
         })
         .build();
     let ref_tx = evm.transact().unwrap();

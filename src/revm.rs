@@ -11,12 +11,10 @@ use crate::source::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    env_logger::init();
-
     let provider = ProviderBuilder::new().on_http(std::env::var("ETH_RPC_URL").unwrap().parse()?);
     let provider = Arc::new(provider);
 
-    let volumes = volumes(U256::from(0), one_ether().div(U256::from(10)), 100);
+    let volumes = volumes(U256::ZERO, one_ether().div(U256::from(10)), 100);
 
     let mut cache_db = init_cache_db(provider.clone());
 

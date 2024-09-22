@@ -20,15 +20,13 @@ use crate::source::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    env_logger::init();
-
     let provider = ProviderBuilder::new().on_http(std::env::var("ETH_RPC_URL").unwrap().parse()?);
 
     let provider = Arc::new(provider);
     let base_fee = provider.get_gas_price().await?;
     let base_fee = base_fee.mul(110).div(100);
 
-    let volumes = volumes(U256::from(0), one_ether().div(U256::from(10)), 10);
+    let volumes = volumes(U256::ZERO, one_ether().div(U256::from(10)), 10);
 
     let mut cache_db = init_cache_db(provider.clone());
 
@@ -44,7 +42,7 @@ async fn main() -> Result<()> {
     let mocked_balance = U256::MAX.div(U256::from(2));
     insert_mapping_storage_slot(
         weth_addr(),
-        U256::from(0),
+        U256::ZERO,
         pool_3000_addr(),
         mocked_balance,
         &mut cache_db,
@@ -52,7 +50,7 @@ async fn main() -> Result<()> {
     .await?;
     insert_mapping_storage_slot(
         usdc_addr(),
-        U256::from(0),
+        U256::ZERO,
         pool_3000_addr(),
         mocked_balance,
         &mut cache_db,

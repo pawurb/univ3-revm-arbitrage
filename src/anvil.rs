@@ -16,8 +16,6 @@ use crate::source::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    env_logger::init();
-
     let rpc_url: Url = std::env::var("ETH_RPC_URL").unwrap().parse()?;
 
     let provider = ProviderBuilder::new().on_http(rpc_url.clone());
@@ -35,7 +33,7 @@ async fn main() -> Result<()> {
     let anvil_provider = ProviderBuilder::new().on_http(anvil.endpoint().parse().unwrap());
     let anvil_provider = Arc::new(anvil_provider);
 
-    let volumes = volumes(U256::from(0), one_ether().div(U256::from(10)), 100);
+    let volumes = volumes(U256::ZERO, one_ether().div(U256::from(10)), 100);
 
     let start = measure_start("anvil_first");
     let first_volume = volumes[0];
