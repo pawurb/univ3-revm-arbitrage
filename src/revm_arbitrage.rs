@@ -1,7 +1,10 @@
 pub mod source;
-use alloy_provider::ProviderBuilder;
+use alloy::{
+    primitives::{Bytes, U256},
+    providers::ProviderBuilder,
+};
 use anyhow::Result;
-use revm::primitives::{Bytecode, Bytes, U256};
+use revm::primitives::Bytecode;
 use std::sync::Arc;
 use std::{ops::Div, str::FromStr};
 

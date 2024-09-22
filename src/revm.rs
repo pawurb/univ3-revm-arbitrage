@@ -1,7 +1,6 @@
 pub mod source;
-use alloy_provider::ProviderBuilder;
+use alloy::{primitives::U256, providers::ProviderBuilder};
 use anyhow::Result;
-use revm::primitives::U256;
 use std::ops::Div;
 use std::sync::Arc;
 

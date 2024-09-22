@@ -1,10 +1,12 @@
-use alloy_provider::{Provider, ProviderBuilder};
+use alloy::{
+    node_bindings::Anvil,
+    primitives::U256,
+    providers::{Provider, ProviderBuilder},
+};
 use reqwest::Url;
 use std::sync::Arc;
 pub mod source;
-use alloy_node_bindings::Anvil;
 use anyhow::Result;
-use revm::primitives::U256;
 use std::ops::Div;
 
 use crate::source::{
@@ -26,7 +28,6 @@ async fn main() -> Result<()> {
     let fork_block = provider.get_block_number().await?;
     let anvil = Anvil::new()
         .fork(rpc_url)
-        .port(portpicker::pick_unused_port().expect("No ports free for Anvil") as u16)
         .fork_block_number(fork_block)
         .block_time(1_u64)
         .spawn();

@@ -1,8 +1,10 @@
-use alloy_provider::{Provider, ProviderBuilder};
+use alloy::{
+    primitives::U256,
+    providers::{Provider, ProviderBuilder},
+};
 use std::sync::Arc;
 pub mod source;
 use anyhow::Result;
-use revm::primitives::U256;
 use std::ops::Div;
 
 use crate::source::{

@@ -5,14 +5,14 @@ Examples for [https://pawelurbanek.com/revm-alloy-anvil-arbitrage](https://pawel
 Usage:
 
 ```bash
-source .env && cargo run --bin eth_call_one
-source .env && cargo run --bin eth_call
-source .env && cargo run --bin anvil
-source .env && cargo run --bin revm
-source .env && cargo run --bin revm_cached
-source .env && cargo run --bin revm_quoter
-source .env && cargo run --bin revm_validate
-source .env && cargo run --bin revm_arbitrage
+source .env && cargo run --bin eth_call_one --release
+source .env && cargo run --bin eth_call --release
+source .env && cargo run --bin anvil --release
+source .env && cargo run --bin revm --release
+source .env && cargo run --bin revm_cached --release
+source .env && cargo run --bin revm_quoter --release
+source .env && cargo run --bin revm_validate --release
+source .env && cargo run --bin revm_arbitrage --release
 ```
 
 

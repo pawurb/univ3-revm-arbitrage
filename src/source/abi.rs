@@ -1,6 +1,10 @@
-use alloy_sol_types::{sol, SolCall, SolValue};
+use alloy::{
+    primitives::{aliases::U24, Address, Bytes, U160, U256},
+    sol,
+    sol_types::{SolCall, SolValue},
+};
+
 use anyhow::Result;
-use revm::primitives::{Address, Bytes, U256};
 
 sol! {
     struct QuoteExactInputSingleParams {
@@ -68,7 +72,7 @@ pub fn get_amount_out_calldata(
 pub fn quote_calldata(token_in: Address, token_out: Address, amount_in: U256, fee: u32) -> Bytes {
     let zero_for_one = token_in < token_out;
 
-    let sqrt_price_limit_x96: U256 = if zero_for_one {
+    let sqrt_price_limit_x96: U160 = if zero_for_one {
         "4295128749".parse().unwrap()
     } else {
         "1461446703485210103287273052203988822378723970341"
@@ -80,7 +84,7 @@ pub fn quote_calldata(token_in: Address, token_out: Address, amount_in: U256, fe
         tokenIn: token_in,
         tokenOut: token_out,
         amountIn: amount_in,
-        fee,
+        fee: U24::from(fee),
         sqrtPriceLimitX96: sqrt_price_limit_x96,
     };
 

@@ -1,7 +1,10 @@
 pub mod source;
-use alloy_provider::{Provider, ProviderBuilder};
+use alloy::{
+    primitives::{Bytes, U256},
+    providers::{Provider, ProviderBuilder},
+};
 use anyhow::Result;
-use revm::primitives::{Bytecode, Bytes, U256};
+use revm::primitives::Bytecode;
 use std::sync::Arc;
 use std::{
     ops::{Div, Mul},
@@ -25,7 +28,7 @@ async fn main() -> Result<()> {
     let base_fee = provider.get_gas_price().await?;
     let base_fee = base_fee.mul(110).div(100);
 
-    let volumes = volumes(U256::from(0), one_ether().div(U256::from(10)), 100);
+    let volumes = volumes(U256::from(0), one_ether().div(U256::from(10)), 10);
 
     let mut cache_db = init_cache_db(provider.clone());
 

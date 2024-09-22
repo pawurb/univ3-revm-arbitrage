@@ -1,14 +1,18 @@
-use alloy_provider::network::TransactionBuilder;
-use alloy_provider::{network::Ethereum, Provider, RootProvider};
-use alloy_rpc_types::TransactionRequest;
-use alloy_sol_types::SolValue;
-use alloy_transport_http::Http;
+use alloy::{
+    network::{Ethereum, TransactionBuilder},
+    primitives::{Address, Bytes, U256},
+    providers::{Provider, RootProvider},
+    rpc::types::TransactionRequest,
+    sol_types::SolValue,
+    transports::http::Http,
+};
+
 use anyhow::{anyhow, Result};
 use reqwest::Client;
 use revm::primitives::{keccak256, AccountInfo, Bytecode};
 use revm::{
     db::{AlloyDB, CacheDB},
-    primitives::{Address, Bytes, ExecutionResult, Output, TransactTo, U256},
+    primitives::{ExecutionResult, Output, TransactTo},
     Evm,
 };
 use std::sync::Arc;
@@ -121,7 +125,7 @@ pub fn revm_revert(
 }
 
 pub fn init_cache_db(provider: Arc<RootProvider<Http<Client>>>) -> AlloyCacheDB {
-    CacheDB::new(AlloyDB::new(provider, Default::default()))
+    CacheDB::new(AlloyDB::new(provider, Default::default()).unwrap())
 }
 
 pub async fn init_account(
@@ -136,7 +140,7 @@ pub async fn init_account(
             Bytecode::new_raw(bytecode)
         }
         Err(_e) => {
-            let bytecode = provider.get_code_at(address, Default::default()).await?;
+            let bytecode = provider.get_code_at(address).await?;
             let bytecode_result = Bytecode::new_raw(bytecode.clone());
             let bytecode = bytecode.to_vec();
             cacache::write(&cache_dir(), cache_key, bytecode.clone()).await?;
