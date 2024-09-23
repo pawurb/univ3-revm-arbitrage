@@ -16,6 +16,8 @@ use crate::source::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    env_logger::init();
+
     let rpc_url: Url = std::env::var("ETH_RPC_URL").unwrap().parse()?;
 
     let provider = ProviderBuilder::new().on_http(rpc_url.clone());
