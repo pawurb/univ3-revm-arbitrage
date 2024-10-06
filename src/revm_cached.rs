@@ -32,8 +32,8 @@ async fn main() -> Result<()> {
     let mocked_erc20 = Bytes::from_str(mocked_erc20).unwrap();
     let mocked_erc20 = Bytecode::new_raw(mocked_erc20);
 
-    init_account_with_bytecode(weth_addr(), mocked_erc20.clone(), &mut cache_db).await?;
-    init_account_with_bytecode(usdc_addr(), mocked_erc20.clone(), &mut cache_db).await?;
+    init_account_with_bytecode(weth_addr(), mocked_erc20.clone(), &mut cache_db)?;
+    init_account_with_bytecode(usdc_addr(), mocked_erc20.clone(), &mut cache_db)?;
     let mocked_balance = U256::MAX.div(U256::from(2));
     insert_mapping_storage_slot(
         weth_addr(),
@@ -41,16 +41,14 @@ async fn main() -> Result<()> {
         pool_3000_addr(),
         mocked_balance,
         &mut cache_db,
-    )
-    .await?;
+    )?;
     insert_mapping_storage_slot(
         usdc_addr(),
         U256::ZERO,
         pool_3000_addr(),
         mocked_balance,
         &mut cache_db,
-    )
-    .await?;
+    )?;
 
     let start = measure_start("revm_cached_first");
     let first_volume = volumes[0];

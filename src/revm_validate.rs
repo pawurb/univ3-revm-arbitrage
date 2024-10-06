@@ -38,8 +38,8 @@ async fn main() -> Result<()> {
     let mocked_erc20 = Bytes::from_str(mocked_erc20).unwrap();
     let mocked_erc20 = Bytecode::new_raw(mocked_erc20);
 
-    init_account_with_bytecode(weth_addr(), mocked_erc20.clone(), &mut cache_db).await?;
-    init_account_with_bytecode(usdc_addr(), mocked_erc20.clone(), &mut cache_db).await?;
+    init_account_with_bytecode(weth_addr(), mocked_erc20.clone(), &mut cache_db)?;
+    init_account_with_bytecode(usdc_addr(), mocked_erc20.clone(), &mut cache_db)?;
 
     let mocked_balance = U256::MAX.div(U256::from(2));
     insert_mapping_storage_slot(
@@ -48,21 +48,19 @@ async fn main() -> Result<()> {
         pool_3000_addr(),
         mocked_balance,
         &mut cache_db,
-    )
-    .await?;
+    )?;
     insert_mapping_storage_slot(
         usdc_addr(),
         U256::ZERO,
         pool_3000_addr(),
         mocked_balance,
         &mut cache_db,
-    )
-    .await?;
+    )?;
 
     let mocked_custom_quoter = include_str!("bytecode/uni_v3_quoter.hex");
     let mocked_custom_quoter = Bytes::from_str(mocked_custom_quoter).unwrap();
     let mocked_custom_quoter = Bytecode::new_raw(mocked_custom_quoter);
-    init_account_with_bytecode(custom_quoter_addr(), mocked_custom_quoter, &mut cache_db).await?;
+    init_account_with_bytecode(custom_quoter_addr(), mocked_custom_quoter, &mut cache_db)?;
 
     for volume in volumes {
         let call_calldata = quote_calldata(weth_addr(), usdc_addr(), volume, 3000);

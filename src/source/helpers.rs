@@ -157,7 +157,7 @@ pub async fn init_account(
     Ok(())
 }
 
-pub async fn init_account_with_bytecode(
+pub fn init_account_with_bytecode(
     address: Address,
     bytecode: Bytecode,
     cache_db: &mut AlloyCacheDB,
@@ -174,7 +174,7 @@ pub async fn init_account_with_bytecode(
     Ok(())
 }
 
-pub async fn insert_mapping_storage_slot(
+pub fn insert_mapping_storage_slot(
     contract: Address,
     slot: U256,
     slot_address: Address,
