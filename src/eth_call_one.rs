@@ -8,8 +8,8 @@ use anyhow::Result;
 use std::ops::Div;
 
 use crate::source::{
-    build_tx, decode_quote_response, me, measure_end, measure_start, official_quoter_addr,
-    one_ether, quote_calldata, usdc_addr, weth_addr,
+    build_tx, decode_quote_response, measure_end, measure_start, quote_calldata, ME, ONE_ETHER,
+    USDC_ADDR, V3_QUOTER_ADDR, WETH_ADDR,
 };
 
 #[tokio::main]
@@ -21,10 +21,10 @@ async fn main() -> Result<()> {
 
     let base_fee = provider.get_gas_price().await?;
 
-    let volume = one_ether().div(U256::from(10));
-    let calldata = quote_calldata(weth_addr(), usdc_addr(), volume, 3000);
+    let volume = ONE_ETHER.div(U256::from(10));
+    let calldata = quote_calldata(WETH_ADDR, USDC_ADDR, volume, 3000);
 
-    let tx = build_tx(official_quoter_addr(), me(), calldata, base_fee);
+    let tx = build_tx(V3_QUOTER_ADDR, ME, calldata, base_fee);
     let start = measure_start("eth_call_one");
     let call = provider.call(&tx).await?;
 

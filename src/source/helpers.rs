@@ -1,11 +1,14 @@
 use alloy::{
     network::{Ethereum, TransactionBuilder},
-    primitives::{utils::parse_units, Address, Bytes, U256},
+    primitives::{Address, Bytes, U256},
     providers::{Provider, RootProvider},
     rpc::types::TransactionRequest,
     sol_types::SolValue,
     transports::http::{Client, Http},
+    uint,
 };
+
+pub static ONE_ETHER: U256 = uint!(1_000_000_000_000_000_000_U256);
 
 use anyhow::{anyhow, Result};
 use revm::primitives::{keccak256, AccountInfo, Bytecode};
@@ -26,10 +29,6 @@ pub fn measure_end(start: (String, Instant)) -> Duration {
     let elapsed = start.1.elapsed();
     println!("Elapsed: {:.2?} for '{}'", elapsed, start.0);
     elapsed
-}
-
-pub fn one_ether() -> U256 {
-    parse_units("1.0", "ether").unwrap().into()
 }
 
 pub fn volumes(from: U256, to: U256, count: usize) -> Vec<U256> {
