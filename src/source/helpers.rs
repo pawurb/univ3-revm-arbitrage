@@ -1,21 +1,24 @@
 use alloy::{
     network::{Ethereum, TransactionBuilder},
     primitives::{Address, Bytes, U256},
-    providers::{Provider, RootProvider},
+    providers::{
+        fillers::{BlobGasFiller, ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller},
+        Identity, Provider, RootProvider,
+    },
     rpc::types::TransactionRequest,
     sol_types::SolValue,
-    transports::http::{Client, Http},
     uint,
 };
 
 pub static ONE_ETHER: U256 = uint!(1_000_000_000_000_000_000_U256);
 
 use anyhow::{anyhow, Result};
-use revm::primitives::{keccak256, AccountInfo, Bytecode};
 use revm::{
-    db::{AlloyDB, CacheDB},
-    primitives::{ExecutionResult, Output, TransactTo},
-    Evm,
+    context::result::{ExecutionResult, Output},
+    database::{AlloyDB, CacheDB, WrapDatabaseAsync},
+    primitives::{keccak256, TxKind},
+    state::{AccountInfo, Bytecode},
+    Context, ExecuteEvm, MainBuilder, MainContext,
 };
 use std::sync::Arc;
 use std::time::Duration;
@@ -60,7 +63,17 @@ pub fn build_tx(to: Address, from: Address, calldata: Bytes, base_fee: u128) -> 
         .into()
 }
 
-pub type AlloyCacheDB = CacheDB<AlloyDB<Http<Client>, Ethereum, Arc<RootProvider<Http<Client>>>>>;
+pub type AlloyCacheDB = CacheDB<WrapDatabaseAsync<AlloyDB<Ethereum, RevmProvider>>>;
+
+pub type RevmProvider = Arc<
+    FillProvider<
+        JoinFill<
+            Identity,
+            JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
+        >,
+        RootProvider,
+    >,
+>;
 
 pub fn revm_call(
     from: Address,
@@ -68,17 +81,17 @@ pub fn revm_call(
     calldata: Bytes,
     cache_db: &mut AlloyCacheDB,
 ) -> Result<Bytes> {
-    let mut evm = Evm::builder()
+    let mut evm = Context::mainnet()
         .with_db(cache_db)
-        .modify_tx_env(|tx| {
+        .modify_tx_chained(|tx| {
             tx.caller = from;
-            tx.transact_to = TransactTo::Call(to);
+            tx.kind = TxKind::Call(to);
             tx.data = calldata;
             tx.value = U256::ZERO;
         })
-        .build();
+        .build_mainnet();
 
-    let ref_tx = evm.transact().unwrap();
+    let ref_tx = evm.replay().unwrap();
     let result = ref_tx.result;
 
     let value = match result {
@@ -100,16 +113,17 @@ pub fn revm_revert(
     calldata: Bytes,
     cache_db: &mut AlloyCacheDB,
 ) -> Result<Bytes> {
-    let mut evm = Evm::builder()
+    let mut evm = Context::mainnet()
         .with_db(cache_db)
-        .modify_tx_env(|tx| {
+        .modify_tx_chained(|tx| {
             tx.caller = from;
-            tx.transact_to = TransactTo::Call(to);
+            tx.kind = TxKind::Call(to);
             tx.data = calldata;
             tx.value = U256::ZERO;
         })
-        .build();
-    let ref_tx = evm.transact().unwrap();
+        .build_mainnet();
+
+    let ref_tx = evm.replay().unwrap();
     let result = ref_tx.result;
 
     let value = match result {
@@ -122,14 +136,14 @@ pub fn revm_revert(
     Ok(value)
 }
 
-pub fn init_cache_db(provider: Arc<RootProvider<Http<Client>>>) -> AlloyCacheDB {
-    CacheDB::new(AlloyDB::new(provider, Default::default()).unwrap())
+pub fn init_cache_db(provider: RevmProvider) -> AlloyCacheDB {
+    CacheDB::new(WrapDatabaseAsync::new(AlloyDB::new(provider, Default::default())).unwrap())
 }
 
 pub async fn init_account(
     address: Address,
     cache_db: &mut AlloyCacheDB,
-    provider: Arc<RootProvider<Http<Client>>>,
+    provider: RevmProvider,
 ) -> Result<()> {
     let cache_key = format!("bytecode-{:?}", address);
     let bytecode = match cacache::read(&cache_dir(), cache_key.clone()).await {

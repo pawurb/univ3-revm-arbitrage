@@ -36,7 +36,7 @@ sol! {
 }
 
 pub fn decode_quote_response(response: Bytes) -> Result<u128> {
-    let (amount_out, _, _, _) = <(u128, u128, u32, u128)>::abi_decode(&response, false)?;
+    let (amount_out, _, _, _) = <(u128, u128, u32, u128)>::abi_decode(&response)?;
     Ok(amount_out)
 }
 
@@ -44,7 +44,7 @@ pub fn decode_get_amount_out_response(response: Bytes) -> Result<u128> {
     let value = response.to_vec();
     let last_64_bytes = &value[value.len() - 64..];
 
-    let (a, b) = match <(i128, i128)>::abi_decode(last_64_bytes, false) {
+    let (a, b) = match <(i128, i128)>::abi_decode(last_64_bytes) {
         Ok((a, b)) => (a, b),
         Err(e) => return Err(anyhow::anyhow!("'getAmountOut' decode failed: {:?}", e)),
     };

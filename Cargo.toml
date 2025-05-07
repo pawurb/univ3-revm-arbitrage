@@ -3,10 +3,10 @@ edition = "2021"
 name = "univ3-revm-arbitrage"
 publish = false
 version = "0.0.0"
-rust-version = "1.81.0"
+rust-version = "1.83.0"
 
 [dependencies]
-alloy = { version = "0.5.4", features = ["full", "node-bindings"] }
+alloy = { version = "0.14", features = ["full", "node-bindings"] }
 anyhow = "1.0.89"
 cacache = { version = "13.0.0", default-features = false, features = [
   "tokio-runtime",
@@ -14,7 +14,7 @@ cacache = { version = "13.0.0", default-features = false, features = [
 ] }
 env_logger = "0.11.5"
 
-revm = { version = "17.1.0", features = ["alloydb"] }
+revm = { version = "23.0.0", features = ["alloydb"] }
 tokio = { version = "1.40.0", features = ["full"] }
 
 [[bin]]

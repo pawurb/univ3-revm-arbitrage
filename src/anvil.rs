@@ -41,7 +41,7 @@ async fn main() -> Result<()> {
     let first_volume = volumes[0];
     let calldata = quote_calldata(WETH_ADDR, USDC_ADDR, first_volume, 3000);
     let tx = build_tx(V3_QUOTER_ADDR, ME, calldata, base_fee);
-    let response = anvil_provider.call(&tx).await?;
+    let response = anvil_provider.call(tx).await?;
     let amount_out = decode_quote_response(response)?;
     println!("{} WETH -> USDC {}", first_volume, amount_out);
     measure_end(start);
@@ -50,7 +50,7 @@ async fn main() -> Result<()> {
     for (index, volume) in volumes.into_iter().enumerate() {
         let calldata = quote_calldata(WETH_ADDR, USDC_ADDR, volume, 3000);
         let tx = build_tx(V3_QUOTER_ADDR, ME, calldata, base_fee);
-        let response = anvil_provider.call(&tx).await?;
+        let response = anvil_provider.call(tx).await?;
         let amount_out = decode_quote_response(response)?;
         if index % 20 == 0 {
             println!("{} WETH -> USDC {}", volume, amount_out);

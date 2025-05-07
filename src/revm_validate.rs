@@ -4,7 +4,7 @@ use alloy::{
     providers::{Provider, ProviderBuilder},
 };
 use anyhow::Result;
-use revm::primitives::Bytecode;
+use revm::state::Bytecode;
 use std::sync::Arc;
 use std::{
     ops::{Div, Mul},
@@ -65,7 +65,7 @@ async fn main() -> Result<()> {
     for volume in volumes {
         let call_calldata = quote_calldata(WETH_ADDR, USDC_ADDR, volume, 3000);
         let tx = build_tx(V3_QUOTER_ADDR, ME, call_calldata, base_fee);
-        let call_response = provider.call(&tx).await?;
+        let call_response = provider.call(tx).await?;
         let call_amount_out = decode_quote_response(call_response)?;
 
         let revm_calldata =

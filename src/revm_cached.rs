@@ -4,7 +4,7 @@ use alloy::{
     providers::ProviderBuilder,
 };
 use anyhow::Result;
-use revm::primitives::Bytecode;
+use revm::state::Bytecode;
 use std::sync::Arc;
 use std::{ops::Div, str::FromStr};
 

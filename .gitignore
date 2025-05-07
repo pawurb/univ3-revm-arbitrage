@@ -1,4 +1,6 @@
 /target
 .evm_cache
 deploy.sh
+cache/
+out/
 
