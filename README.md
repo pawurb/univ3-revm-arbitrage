@@ -1,6 +1,6 @@
 # Uniswap V3 MEV arbitrage calculations with REVM
 
-Examples for [https://pawelurbanek.com/revm-alloy-anvil-arbitrage](https://pawelurbanek.com/revm-alloy-anvil-arbitrage)
+Examples for [https://hotpath.rs/blog/revm-alloy-anvil-arbitrage](https://hotpath.rs/blog/revm-alloy-anvil-arbitrage)
 
 Usage:
 
